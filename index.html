@@ -1,0 +1,1636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Positive Strides – New Rider Application</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+3:wght@300;400;500;600&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+<!--
+  ════════════════════════════════════════════════
+  EMAIL SETUP — do this once before going live
+  ════════════════════════════════════════════════
+  1. Go to https://www.emailjs.com — create a FREE account (200 emails/month)
+  2. Add an Email Service → connect your Gmail → note your SERVICE ID
+  3. Create an Email Template:
+       To Email: {{to_email}}
+       Subject:  {{subject}}
+       Body:     {{message}}
+       Reply To: {{reply_to}}
+     → note your TEMPLATE ID
+  4. Account → API Keys → note your PUBLIC KEY
+  5. Replace the three placeholder values below
+  ════════════════════════════════════════════════
+-->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>
+  const EJS_KEY      = 'IVnA0PkRch8nlkfRW';
+  const EJS_SERVICE  = 'service_2yow0pc';
+  const EJS_TEMPLATE = 'template_wzoqdlp';
+  const OFFICE_EMAIL = 'positivestridesoffice@gmail.com';
+</script>
+<style>
+:root{
+  --navy:#14406b; --blue:#2a72b8; --sky:#6aaee0;
+  --bg:#eef4fb; --card:#f5f9ff; --charcoal:#1e2a38;
+  --gray:#5a6a7a; --border:#c2d8ee; --err:#c0392b;
+  --shadow:0 2px 12px rgba(20,64,107,.10);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Source Sans 3',sans-serif;background:var(--bg);color:var(--charcoal);min-height:100vh;}
+
+/* header */
+.hd{background:var(--navy);padding:26px 20px 20px;text-align:center;position:relative;overflow:hidden;}
+.hd::before{content:'';position:absolute;inset:-40px;
+  background:radial-gradient(ellipse at 30% 50%,rgba(42,114,184,.35) 0%,transparent 60%),
+             radial-gradient(ellipse at 70% 30%,rgba(20,64,107,.25) 0%,transparent 55%);
+  pointer-events:none;}
+.hd h1{font-family:'Playfair Display',serif;color:#fff;font-size:1.85rem;font-weight:700;position:relative;}
+.hd p{color:var(--sky);font-size:.92rem;margin-top:5px;font-weight:300;position:relative;}
+
+/* progress nav */
+.pnav{background:var(--card);border-bottom:2px solid var(--border);overflow-x:auto;}
+.pnav ul{display:flex;list-style:none;margin:0 auto;max-width:960px;min-width:max-content;}
+.pnav li{flex:1;}
+.pnav button{display:flex;flex-direction:column;align-items:center;width:100%;padding:12px 8px 10px;
+  background:none;border:none;border-bottom:3px solid transparent;cursor:pointer;
+  font-family:'Source Sans 3',sans-serif;font-size:.75rem;font-weight:500;color:var(--gray);
+  transition:all .2s;gap:3px;white-space:nowrap;}
+.pnav button .n{width:23px;height:23px;border-radius:50%;background:var(--border);color:var(--gray);
+  display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;transition:all .2s;}
+.pnav button.active{color:var(--navy);border-bottom-color:var(--blue);}
+.pnav button.active .n{background:var(--blue);color:#fff;}
+.pnav button.done .n{background:var(--navy);color:#fff;}
+.pnav button.done .n::after{content:'✓';}
+
+/* layout */
+.wrap{max-width:800px;margin:0 auto;padding:26px 16px 60px;}
+.step{display:none;animation:fi .25s ease;}
+.step.active{display:block;}
+@keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* card */
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;
+  padding:28px 32px;box-shadow:var(--shadow);margin-bottom:16px;}
+.stitle{font-family:'Playfair Display',serif;font-size:1.38rem;color:var(--navy);margin-bottom:4px;font-weight:600;}
+.ssub{font-size:.86rem;color:var(--gray);margin-bottom:22px;line-height:1.5;}
+.sh{font-family:'Playfair Display',serif;font-size:1rem;color:#1e5a96;
+  margin:24px 0 13px;padding-bottom:6px;border-bottom:1px solid #8dbfe8;}
+hr.dv{border:none;border-top:1px solid var(--border);margin:22px 0;}
+
+/* waiver titles */
+.wt{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;color:#b30000;margin-bottom:4px;}
+.wn{font-size:.86rem;color:#b30000;font-weight:600;margin-bottom:18px;}
+
+/* grid */
+.r{display:grid;gap:13px;margin-bottom:13px;}
+.r2{grid-template-columns:1fr 1fr;}
+.r3{grid-template-columns:1fr 1fr 1fr;}
+.ra{grid-template-columns:2fr 1fr;}
+.fg{display:flex;flex-direction:column;gap:4px;}
+label.L{font-size:.79rem;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.04em;}
+label.L .rq{color:var(--err);margin-left:2px;}
+
+/* inputs */
+input[type=text],input[type=email],input[type=tel],input[type=date],select,textarea{
+  padding:9px 12px;border:1.5px solid var(--border);border-radius:6px;
+  font-family:'Source Sans 3',sans-serif;font-size:.93rem;color:var(--charcoal);
+  background:#fff;transition:border-color .18s,box-shadow .18s;width:100%;-webkit-appearance:none;}
+input:focus,select:focus,textarea:focus{
+  outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(42,114,184,.13);}
+input.E,select.E,textarea.E{
+  border-color:var(--err)!important;box-shadow:0 0 0 3px rgba(192,57,43,.10)!important;}
+textarea{resize:vertical;min-height:86px;line-height:1.5;}
+.em{font-size:.76rem;color:var(--err);margin-top:2px;display:none;}
+.em.on{display:block;}
+
+/* radio / check */
+.cg{display:flex;gap:16px;flex-wrap:wrap;padding:3px 0;}
+.ri,.ci{display:flex;align-items:center;gap:6px;cursor:pointer;font-size:.93rem;
+  font-weight:400;text-transform:none;letter-spacing:0;color:var(--charcoal);}
+.ri input,.ci input{width:16px;height:16px;accent-color:var(--blue);
+  cursor:pointer;flex-shrink:0;padding:0;border:none;box-shadow:none;}
+
+/* yes/no row */
+.yn{display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:12px;}
+.yn-l{font-size:.93rem;color:var(--charcoal);flex:1;min-width:190px;padding-top:2px;}
+.yn-o{display:flex;gap:12px;flex-shrink:0;}
+
+/* conditional panel */
+.cp{background:#e8f2fb;border-left:3px solid var(--sky);border-radius:0 6px 6px 0;
+  padding:12px 16px;margin:5px 0 12px;display:none;}
+.cp.on{display:block;}
+
+/* contact card */
+.cc{background:var(--card);border:1.5px solid var(--border);border-radius:8px;
+  padding:16px 18px;margin-bottom:13px;}
+.cct{font-weight:700;color:var(--navy);font-size:.87rem;text-transform:uppercase;
+  letter-spacing:.04em;margin-bottom:12px;}
+
+/* equipment */
+.eq{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.eqi{display:flex;align-items:center;gap:8px;padding:8px 12px;
+  border:1.5px solid var(--border);border-radius:6px;cursor:pointer;
+  transition:all .18s;font-size:.9rem;}
+.eqi:has(input:checked){border-color:var(--blue);background:#ddeef8;}
+.eqi input{width:16px;height:16px;accent-color:var(--blue);padding:0;border:none;box-shadow:none;flex-shrink:0;}
+
+/* notice */
+.nt{background:#ddeef8;border:1px solid var(--sky);border-radius:6px;
+  padding:10px 14px;font-size:.86rem;color:var(--navy);margin-bottom:16px;line-height:1.5;}
+
+/* legal */
+.lg{background:#eaf3fc;border:1px solid #8dbfe8;border-radius:6px;
+  padding:15px 18px;font-size:.83rem;line-height:1.7;color:#3a4a5a;
+  margin-bottom:16px;max-height:250px;overflow-y:auto;}
+.lg h4{font-family:'Playfair Display',serif;font-size:.92rem;color:var(--navy);margin-bottom:6px;}
+.lg h4+p,.lg p+p{margin-top:7px;}
+.lg ul{padding-left:17px;margin:6px 0;}
+.lg li{margin-bottom:4px;}
+
+/* signature */
+.sw{border:1.5px solid var(--border);border-radius:6px;background:#fff;position:relative;overflow:hidden;}
+.sw.E{border-color:var(--err);}
+.si{width:100%;padding:9px 14px 27px;
+  font-family:'Dancing Script',cursive!important;font-size:1.5rem!important;
+  font-weight:600;color:#1a1a6e;border:none!important;outline:none!important;
+  background:transparent;box-shadow:none!important;letter-spacing:.02em;}
+.si::placeholder{font-family:'Dancing Script',cursive;font-size:1.2rem;color:#c8d8ee;font-weight:400;}
+.sul{position:absolute;bottom:21px;left:14px;right:14px;height:1px;background:var(--border);pointer-events:none;}
+.sc{position:absolute;bottom:5px;left:14px;font-size:.65rem;color:var(--gray);pointer-events:none;font-style:italic;}
+.sr{display:grid;grid-template-columns:1fr 165px;gap:13px;align-items:end;margin-bottom:13px;}
+
+/* income grid */
+.ig{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:6px;margin-top:4px;}
+
+/* nav */
+.nav{display:flex;justify-content:space-between;align-items:center;
+  margin-top:24px;flex-wrap:wrap;gap:9px;}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:10px 24px;border-radius:6px;
+  font-family:'Source Sans 3',sans-serif;font-size:.93rem;font-weight:600;
+  cursor:pointer;border:none;transition:all .18s;text-decoration:none;}
+.bp{background:var(--blue);color:#fff;}
+.bp:hover{background:var(--navy);}
+.bs{background:var(--card);color:var(--navy);border:1.5px solid var(--blue);}
+.bs:hover{background:#ddeef8;}
+.bsub{background:var(--navy);color:#fff;padding:12px 32px;font-size:.97rem;}
+.bsub:hover{background:#0e2d4a;}
+.btn:disabled{opacity:.6;cursor:not-allowed;}
+
+/* error summary */
+.esum{background:#fdf0ee;border:2px solid var(--err);border-radius:8px;
+  padding:14px 18px;margin-bottom:18px;display:none;}
+.esum.on{display:block;}
+.esum h4{color:var(--err);font-size:.93rem;margin-bottom:7px;}
+.esum ul{padding-left:17px;font-size:.85rem;color:var(--err);line-height:1.85;}
+
+/* print */
+@media print{
+  .pnav,.nav,.btn,.hd,.esum{display:none!important;}
+  body{background:#fff;}
+  .step{display:block!important;page-break-inside:avoid;}
+  .card{box-shadow:none;border:1px solid #ccc;margin-bottom:8px;page-break-inside:avoid;}
+  .lg{max-height:none;overflow:visible;}
+  .si{font-size:1.1rem!important;color:#000!important;}
+}
+
+/* responsive */
+@media(max-width:600px){
+  .card{padding:18px 14px;}
+  .r2,.r3,.ra,.sr,.eq{grid-template-columns:1fr;}
+  .hd h1{font-size:1.45rem;}
+}
+</style>
+</head>
+<body>
+
+<header class="hd">
+  <h1>New Rider Application</h1>
+  <p>Positive Strides Therapeutic Riding Center, Inc. &nbsp;·&nbsp; P.O. Box 391, Easton, MD 21601</p>
+</header>
+
+<nav class="pnav">
+  <ul>
+    <li><button class="active" onclick="goTo(0)" id="t0"><span class="n">1</span><span>Registration</span></button></li>
+    <li><button onclick="goTo(1)" id="t1"><span class="n">2</span><span>Medical Auth.</span></button></li>
+    <li><button onclick="goTo(2)" id="t2"><span class="n">3</span><span>Photo Release</span></button></li>
+    <li><button onclick="goTo(3)" id="t3"><span class="n">4</span><span>Liability Waiver</span></button></li>
+    <li><button onclick="goTo(4)" id="t4"><span class="n">5</span><span>Farm Waiver</span></button></li>
+  </ul>
+</nav>
+
+<div class="wrap">
+
+<!-- ══════ STEP 1 · REGISTRATION ══════ -->
+<div class="step active" id="s0">
+<div class="card">
+  <h2 class="stitle">Rider's Registration Form</h2>
+  <p class="ssub">Fields marked <span style="color:var(--err)">*</span> are required.</p>
+
+  <h3 class="sh">Rider Information</h3>
+  <div class="r ra">
+    <div class="fg">
+      <label class="L" for="rider-name">Rider's Full Name <span class="rq">*</span></label>
+      <input type="text" id="rider-name" autocomplete="name" placeholder="First and last name">
+      <span class="em" id="E-rider-name">Rider's full name is required.</span>
+    </div>
+    <div class="fg">
+      <label class="L" for="rider-dob">Date of Birth <span class="rq">*</span></label>
+      <input type="date" id="rider-dob">
+      <span class="em" id="E-rider-dob">Date of birth is required.</span>
+    </div>
+  </div>
+  <div class="r">
+    <div class="fg">
+      <label class="L" for="rider-street">Street Address <span class="rq">*</span></label>
+      <input type="text" id="rider-street" autocomplete="address-line1" placeholder="Street address">
+      <span class="em" id="E-rider-street">Street address is required.</span>
+    </div>
+  </div>
+  <div class="r r3">
+    <div class="fg">
+      <label class="L" for="rider-city">City <span class="rq">*</span></label>
+      <input type="text" id="rider-city" autocomplete="address-level2" placeholder="City">
+      <span class="em" id="E-rider-city">City is required.</span>
+    </div>
+    <div class="fg">
+      <label class="L" for="rider-state">State <span class="rq">*</span></label>
+      <input type="text" id="rider-state" autocomplete="address-level1" placeholder="MD" style="max-width:100px;">
+      <span class="em" id="E-rider-state">State is required.</span>
+    </div>
+    <div class="fg">
+      <label class="L" for="rider-zip">ZIP <span class="rq">*</span></label>
+      <input type="text" id="rider-zip" autocomplete="postal-code" placeholder="21601" style="max-width:120px;">
+      <span class="em" id="E-rider-zip">ZIP is required.</span>
+    </div>
+  </div>
+  <div class="r r2">
+    <div class="fg">
+      <label class="L" for="rider-phone">Phone <span class="rq">*</span></label>
+      <input type="tel" id="rider-phone" class="ph" placeholder="410-555-1234">
+      <span class="em" id="E-rider-phone">Phone number is required.</span>
+    </div>
+    <div class="fg">
+      <label class="L" for="rider-email">Email <span class="rq">*</span></label>
+      <input type="email" id="rider-email" placeholder="email@example.com">
+      <span class="em" id="E-rider-email">Email address is required.</span>
+    </div>
+  </div>
+  <p style="font-size:.82rem;color:var(--gray);margin-bottom:4px;font-style:italic;">If you are a school official or caregiver completing this form, please enter your own contact phone and email above, then complete the Primary Contact section below with the parent/guardian information.</p>
+
+  <h3 class="sh">Parent / Guardian / Caregiver</h3>
+  <p style="font-size:.84rem;color:var(--gray);margin-bottom:13px;">Add a Primary Contact (required) and optionally a Secondary Contact — e.g. both a parent and a caregiver.</p>
+
+  <div class="cc">
+    <div class="cct">Primary Contact <span style="color:var(--err)">*</span></div>
+    <div class="r r2">
+      <div class="fg">
+        <label class="L" for="c1-role">Relationship <span class="rq">*</span></label>
+        <select id="c1-role" onchange="selfFill()">
+          <option value="">— Select —</option>
+          <option>Parent</option><option>Legal Guardian</option>
+          <option>Caregiver</option><option>Self (adult rider)</option>
+        </select>
+        <span class="em" id="E-c1-role">Please select a relationship.</span>
+      </div>
+      <div class="fg">
+        <label class="L" for="c1-name">Full Name <span class="rq">*</span></label>
+        <input type="text" id="c1-name" class="tc" autocomplete="off" placeholder="Full name">
+        <span class="em" id="E-c1-name">Primary contact name is required.</span>
+      </div>
+    </div>
+    <div class="r">
+      <div class="fg">
+        <label class="L" for="c1-addr">Address</label>
+        <input type="text" id="c1-addr" autocomplete="off" placeholder="If different from rider's address">
+      </div>
+    </div>
+    <div class="r r2">
+      <div class="fg">
+        <label class="L" for="c1-phone">Phone</label>
+        <input type="tel" id="c1-phone" class="ph" placeholder="410-555-1234">
+      </div>
+      <div class="fg">
+        <label class="L" for="c1-email">Email</label>
+        <input type="email" id="c1-email" placeholder="email@example.com">
+      </div>
+    </div>
+  </div>
+
+  <div class="cc">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+      <div class="cct" style="margin-bottom:0;">Secondary Contact <span style="font-weight:400;font-size:.78rem;color:var(--gray);text-transform:none;letter-spacing:0;">(optional)</span></div>
+      <label class="ci" style="font-size:.83rem;color:var(--blue);">
+        <input type="checkbox" id="add-c2" onchange="sh('c2-fields',this.checked)" style="width:15px;height:15px;accent-color:var(--blue);padding:0;border:none;box-shadow:none;">
+        Add secondary contact
+      </label>
+    </div>
+    <div id="c2-fields" style="display:none;margin-top:11px;">
+      <div class="r r2">
+        <div class="fg">
+          <label class="L" for="c2-role">Relationship</label>
+          <select id="c2-role">
+            <option value="">— Select —</option>
+            <option>Parent</option><option>Legal Guardian</option>
+            <option>Caregiver</option><option>Self (adult rider)</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label class="L" for="c2-name">Full Name</label>
+          <input type="text" id="c2-name" class="tc" autocomplete="off" placeholder="Full name">
+        </div>
+      </div>
+      <div class="r">
+        <div class="fg">
+          <label class="L" for="c2-addr">Address</label>
+          <input type="text" id="c2-addr" autocomplete="off" placeholder="If different from rider's address">
+        </div>
+      </div>
+      <div class="r r2">
+        <div class="fg">
+          <label class="L" for="c2-phone">Phone</label>
+          <input type="tel" id="c2-phone" class="ph" placeholder="410-555-1234">
+        </div>
+        <div class="fg">
+          <label class="L" for="c2-email">Email</label>
+          <input type="email" id="c2-email" placeholder="email@example.com">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="sh">School / Institution</h3>
+  <div class="r r2">
+    <div class="fg">
+      <label class="L" for="school-name">School / Institution</label>
+      <input type="text" id="school-name" autocomplete="new-password" placeholder="Name of school or institution">
+    </div>
+    <div class="fg">
+      <label class="L" for="school-phone">School Phone</label>
+      <input type="tel" id="school-phone" class="ph" autocomplete="new-password" placeholder="410-555-1234">
+    </div>
+  </div>
+
+  <h3 class="sh">Prior EAAT Experience</h3>
+  <div class="yn">
+    <span class="yn-l">Has the rider ever participated in Equine Assisted Activities and Therapies (EAAT) in the past?</span>
+    <div class="yn-o">
+      <label class="ri"><input type="radio" name="eaat" value="Yes" onchange="sh('eaat-d',true)"> Yes</label>
+      <label class="ri"><input type="radio" name="eaat" value="No" onchange="sh('eaat-d',false)"> No</label>
+    </div>
+  </div>
+  <div class="cp" id="eaat-d">
+    <div class="fg"><label class="L" for="eaat-exp">Please explain</label>
+    <textarea id="eaat-exp" placeholder="Describe previous EAAT participation…"></textarea></div>
+  </div>
+
+  <hr class="dv">
+
+  <div class="yn">
+    <span class="yn-l">Has the rider ever been convicted of a crime against another person? <span class="rq" style="color:var(--err)">*</span></span>
+    <div class="yn-o">
+      <label class="ri"><input type="radio" name="conviction" value="Yes" onchange="sh('conv-d',true)"> Yes</label>
+      <label class="ri"><input type="radio" name="conviction" value="No" onchange="sh('conv-d',false)"> No</label>
+    </div>
+  </div>
+  <span class="em" id="E-conviction">Please answer this question.</span>
+  <div class="cp" id="conv-d">
+    <p style="font-size:.83rem;color:var(--gray);margin-bottom:8px;">Answering yes will not prevent participation — it helps us with scheduling placement.</p>
+    <div class="fg"><label class="L" for="conv-exp">Please explain</label>
+    <textarea id="conv-exp" placeholder="Provide details…"></textarea></div>
+  </div>
+
+  <h3 class="sh">Demographics <span style="font-weight:400;font-size:.8rem;color:var(--gray)">(grant/funding tracking only)</span></h3>
+  <div class="r r2">
+    <div class="fg">
+      <label class="L" for="ethnicity">Rider's Ethnicity</label>
+      <select id="ethnicity">
+        <option value="">— Select or prefer not to say —</option>
+        <option>American Indian or Alaska Native</option>
+        <option>Asian</option>
+        <option>Black or African American</option>
+        <option>Hispanic or Latino</option>
+        <option>Middle Eastern or North African</option>
+        <option>Native Hawaiian or Pacific Islander</option>
+        <option>White</option>
+        <option>Two or More Races</option>
+        <option>Other</option>
+        <option>Prefer not to say</option>
+      </select>
+    </div>
+    <div class="fg">
+      <label class="L" for="mil-status">Rider's Military Status</label>
+      <input type="text" id="mil-status" autocomplete="off" placeholder="Veteran, Active Duty, N/A…">
+    </div>
+  </div>
+  <div class="yn">
+    <span class="yn-l">Is any family member former/active military?</span>
+    <div class="yn-o">
+      <label class="ri"><input type="radio" name="fam-mil" value="Yes" onchange="sh('fam-mil-d',true)"> Yes</label>
+      <label class="ri"><input type="radio" name="fam-mil" value="No" onchange="sh('fam-mil-d',false)"> No</label>
+    </div>
+  </div>
+  <div class="cp" id="fam-mil-d">
+    <div class="fg"><label class="L" for="fam-mil-rel">Relationship to Rider</label>
+    <input type="text" id="fam-mil-rel" autocomplete="off" placeholder="E.g., Parent, Sibling"></div>
+  </div>
+  <div class="fg" style="margin-bottom:12px;">
+    <label class="L">Education Level</label>
+    <div class="cg" style="margin-top:4px;">
+      <label class="ci"><input type="checkbox" name="edu" value="High School Diploma"> High School Diploma</label>
+      <label class="ci"><input type="checkbox" name="edu" value="Certificate"> Certificate</label>
+    </div>
+  </div>
+  <div class="fg" style="margin-bottom:13px;">
+    <label class="L">Household Income Range</label>
+    <div class="ig" style="margin-top:4px;">
+      <label class="ri"><input type="radio" name="income" value="Under $10,000"> Under $10,000</label>
+      <label class="ri"><input type="radio" name="income" value="Under $20,000"> Under $20,000</label>
+      <label class="ri"><input type="radio" name="income" value="Under $30,000"> Under $30,000</label>
+      <label class="ri"><input type="radio" name="income" value="Under $40,000"> Under $40,000</label>
+      <label class="ri"><input type="radio" name="income" value="Under $50,000"> Under $50,000</label>
+      <label class="ri"><input type="radio" name="income" value="$50,000+"> $50,000+</label>
+    </div>
+  </div>
+
+  <h3 class="sh">Diagnoses &amp; Additional Information</h3>
+  <div style="background:#ddeef8;border:1px solid var(--sky);border-radius:8px;padding:13px 16px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:9px;">
+    <div>
+      <div style="font-weight:700;color:var(--navy);font-size:.91rem;margin-bottom:2px;">Physician Documentation Required</div>
+      <div style="font-size:.82rem;color:var(--gray);">A completed physician form must be submitted before your rider's first session.</div>
+    </div>
+    <a href="https://www.positivestridescenter.org/uploads/2/1/3/0/21308044/physiciandocuments.pdf" target="_blank" rel="noopener"
+       style="display:inline-flex;align-items:center;gap:5px;padding:8px 16px;background:var(--blue);color:#fff;border-radius:6px;
+       font-family:'Source Sans 3',sans-serif;font-size:.86rem;font-weight:600;text-decoration:none;white-space:nowrap;">
+      ⬇ Download Required Physician Docs
+    </a>
+  </div>
+  <div class="fg" style="margin-bottom:13px;">
+    <label class="L" for="diagnoses">ALL Diagnoses &amp; Pertinent Information <span class="rq">*</span></label>
+    <p style="font-size:.8rem;color:var(--gray);margin:3px 0 6px;">Include likes/dislikes, interests, triggers, and anything that helps our staff and volunteers better serve your rider.</p>
+    <textarea id="diagnoses" rows="6" style="min-height:115px;" placeholder="Diagnoses, medical history, behavioral notes, likes/dislikes, triggers…"></textarea>
+    <span class="em" id="E-diagnoses">Please provide the rider's diagnoses and relevant information.</span>
+  </div>
+
+  <h3 class="sh">Equipment</h3>
+  <div class="eq">
+    <label class="eqi"><input type="checkbox" name="equip" value="Own riding helmet"> Own riding helmet</label>
+    <label class="eqi"><input type="checkbox" name="equip" value="Positive Strides helmet"> Positive Strides helmet</label>
+    <label class="eqi"><input type="checkbox" name="equip" value="Own riding boots"> Own riding boots</label>
+    <label class="eqi"><input type="checkbox" name="equip" value="Positive Strides boots"> Positive Strides boots</label>
+  </div>
+  <div class="r" style="margin-top:11px;max-width:175px;">
+    <div class="fg"><label class="L" for="shoe-size">Shoe Size</label>
+    <input type="text" id="shoe-size" autocomplete="off" placeholder="E.g., 8W"></div>
+  </div>
+
+  <h3 class="sh">Form Completed By</h3>
+  <div class="fg" style="margin-bottom:18px;">
+    <label class="L">I am completing this form as the: <span class="rq">*</span></label>
+    <div class="cg" style="margin-top:4px;">
+      <label class="ri"><input type="radio" name="completed-by" value="Rider"> Rider</label>
+      <label class="ri"><input type="radio" name="completed-by" value="Parent"> Parent</label>
+      <label class="ri"><input type="radio" name="completed-by" value="Guardian"> Guardian</label>
+      <label class="ri"><input type="radio" name="completed-by" value="Caregiver"> Caregiver</label>
+    </div>
+    <span class="em" id="E-completed-by">Please indicate who is completing this form.</span>
+  </div>
+
+  <div class="sr">
+    <div class="fg">
+      <label class="L">Signature <span class="rq">*</span></label>
+      <div class="sw" id="sw-sig-reg">
+        <input type="text" class="si" id="sig-reg" autocomplete="off" placeholder="Type your full name">
+        <div class="sul"></div><span class="sc">Electronic signature — type your full legal name</span>
+      </div>
+      <span class="em" id="E-sig-reg">Signature is required — type your full legal name.</span>
+    </div>
+    <div class="fg">
+      <label class="L" for="date-reg">Date <span class="rq">*</span></label>
+      <input type="date" id="date-reg">
+      <span class="em" id="E-date-reg">Date is required.</span>
+    </div>
+  </div>
+  <div class="r">
+    <div class="fg">
+      <label class="L" for="pname-reg">Printed Name <span class="rq">*</span></label>
+      <input type="text" id="pname-reg" class="tc" autocomplete="off" placeholder="Print full name">
+      <span class="em" id="E-pname-reg">Printed name is required.</span>
+    </div>
+  </div>
+</div>
+<div class="nav"><span></span>
+  <button class="btn bp" onclick="nxt(0)">Continue to Medical Authorization →</button>
+</div>
+</div><!-- /s0 -->
+
+
+<!-- ══════ STEP 2 · MEDICAL AUTH ══════ -->
+<div class="step" id="s1">
+<div class="card">
+  <h2 class="stitle">Authorization for Emergency Medical Treatment</h2>
+  <p class="ssub">In the event emergency medical aid/treatment is required due to illness or injury during the process of receiving services or while on the property of Positive Strides Therapeutic Riding Center, Inc.</p>
+
+  <div class="nt">Rider and contact information is auto-filled from your Registration. Please verify and correct if needed.</div>
+
+  <div class="r ra">
+    <div class="fg">
+      <label class="L" for="med-name">Rider's Name <span class="rq">*</span></label>
+      <input type="text" id="med-name" class="tc" autocomplete="off" placeholder="Full name">
+      <span class="em" id="E-med-name">Required.</span>
+    </div>
+    <div class="fg">
+      <label class="L" for="med-dob">Date of Birth</label>
+      <input type="date" id="med-dob">
+    </div>
+  </div>
+  <div class="r">
+    <div class="fg">
+      <label class="L" for="med-street">Street Address <span class="rq">*</span></label>
+      <input type="text" id="med-street" autocomplete="off" placeholder="Street address">
+      <span class="em" id="E-med-street">Required.</span>
+    </div>
+  </div>
+  <div class="r r3">
+    <div class="fg">
+      <label class="L" for="med-city">City <span class="rq">*</span></label>
+      <input type="text" id="med-city" autocomplete="off" placeholder="City">
+      <span class="em" id="E-med-city">Required.</span>
+    </div>
+    <div class="fg">
+      <label class="L" for="med-state">State</label>
+      <input type="text" id="med-state" autocomplete="off" placeholder="MD" style="max-width:100px;">
+    </div>
+    <div class="fg">
+      <label class="L" for="med-zip">ZIP</label>
+      <input type="text" id="med-zip" autocomplete="off" placeholder="21601" style="max-width:120px;">
+    </div>
+  </div>
+  <div class="r r2">
+    <div class="fg">
+      <label class="L" for="med-phone">Phone</label>
+      <input type="tel" id="med-phone" class="ph" placeholder="410-555-1234">
+    </div>
+    <div class="fg">
+      <label class="L" for="med-email">Email</label>
+      <input type="email" id="med-email" placeholder="email@example.com">
+    </div>
+  </div>
+
+  <h3 class="sh">Emergency Contacts</h3>
+  <p style="font-size:.86rem;color:var(--gray);margin-bottom:12px;">To be contacted if the rider cannot legally or physically speak for themselves.</p>
+  <div class="r r2">
+    <div class="fg">
+      <label class="L" for="ec1-name">Contact 1 – Name <span class="rq">*</span></label>
+      <input type="text" id="ec1-name" class="tc" autocomplete="off" placeholder="Full name">
+      <span class="em" id="E-ec1-name">Required.</span>
+    </div>
+    <div class="fg">
+      <label class="L" for="ec1-phone">Phone <span class="rq">*</span></label>
+      <input type="tel" id="ec1-phone" class="ph" placeholder="410-555-1234">
+      <span class="em" id="E-ec1-phone">Required.</span>
+    </div>
+  </div>
+  <div class="r r2">
+    <div class="fg">
+      <label class="L" for="ec2-name">Contact 2 – Name</label>
+      <input type="text" id="ec2-name" class="tc" autocomplete="off" placeholder="Full name">
+    </div>
+    <div class="fg">
+      <label class="L" for="ec2-phone">Phone</label>
+      <input type="tel" id="ec2-phone" class="ph" placeholder="410-555-1234">
+    </div>
+  </div>
+
+  <h3 class="sh">Physician &amp; Insurance</h3>
+  <div class="r r2">
+    <div class="fg">
+      <label class="L" for="phys-name">Physician's Name <span class="rq">*</span></label>
+      <input type="text" id="phys-name" class="tc" autocomplete="off" placeholder="Full name">
+      <span class="em" id="E-phys-name">Physician's name is required.</span>
+    </div>
+    <div class="fg">
+      <label class="L" for="phys-phone">Physician's Phone <span class="rq">*</span></label>
+      <input type="tel" id="phys-phone" class="ph" placeholder="410-555-1234">
+      <span class="em" id="E-phys-phone">Physician's phone is required.</span>
+    </div>
+  </div>
+  <div class="r r2">
+    <div class="fg">
+      <label class="L" for="ins-co">Health Insurance Company</label>
+      <input type="text" id="ins-co" autocomplete="off" placeholder="Insurance company name">
+    </div>
+    <div class="fg">
+      <label class="L" for="ins-pol">Policy Number</label>
+      <input type="text" id="ins-pol" autocomplete="off" placeholder="Policy #">
+    </div>
+  </div>
+
+  <h3 class="sh">Consent Plan <span class="rq" style="color:var(--err)">*</span></h3>
+  <div class="fg" style="margin-bottom:13px;">
+    <div class="cg">
+      <label class="ri"><input type="radio" name="consent" value="Consent" onchange="sh('nc-d',false)"> <strong>Consent</strong> — I authorize emergency medical treatment</label>
+      <label class="ri"><input type="radio" name="consent" value="Non-Consent" onchange="sh('nc-d',true)"> <strong>Non-Consent</strong> — I do not consent</label>
+    </div>
+    <span class="em" id="E-consent">Please select a consent plan.</span>
+  </div>
+  <div class="cp" id="nc-d">
+    <div class="nt" style="background:#fff3f0;border-color:#e8b5ae;margin-bottom:9px;">In the event emergency treatment/aid is required, I wish the following procedures (for which I take full responsibility) to take place:</div>
+    <div class="fg"><label class="L" for="nc-inst">Non-Consent Instructions</label>
+    <textarea id="nc-inst" placeholder="Describe the procedures you wish to be followed…" rows="4"></textarea></div>
+  </div>
+
+  <div class="lg">
+    <h4>Authorization Statement</h4>
+    <p>I authorize Positive Strides Therapeutic Riding Center, Inc. to:</p>
+    <ul>
+      <li>Secure and retain medical treatment and transportation if needed.</li>
+      <li>Release client records upon request to the authorized individual or agency involved in the medical emergency treatment.</li>
+    </ul>
+    <p>This authorization includes x-ray, surgery, hospitalization and any treatment procedure deemed "life saving" by the physician. This provision will not only be involved if the contact person cannot be reached and/or the rider is unable, legally or physically, to speak for herself/himself.</p>
+  </div>
+
+  <div class="sr" style="margin-top:16px;">
+    <div class="fg">
+      <label class="L">Consent Signature <span class="rq">*</span></label>
+      <div class="sw" id="sw-sig-med">
+        <input type="text" class="si" id="sig-med" autocomplete="off" placeholder="Type your full name">
+        <div class="sul"></div><span class="sc">Electronic signature — type your full legal name</span>
+      </div>
+      <span class="em" id="E-sig-med">Signature is required.</span>
+    </div>
+    <div class="fg">
+      <label class="L" for="date-med">Date <span class="rq">*</span></label>
+      <input type="date" id="date-med">
+      <span class="em" id="E-date-med">Required.</span>
+    </div>
+  </div>
+  <div class="r r2" style="margin-top:9px;">
+    <div class="fg">
+      <label class="L" for="pname-med">Printed Name <span class="rq">*</span></label>
+      <input type="text" id="pname-med" class="tc" autocomplete="off" placeholder="Print full name">
+      <span class="em" id="E-pname-med">Required.</span>
+    </div>
+    <div class="fg">
+      <label class="L">Signing as: <span class="rq">*</span></label>
+      <div class="cg" style="margin-top:4px;">
+        <label class="ri"><input type="radio" name="med-as" value="Rider"> Rider</label>
+        <label class="ri"><input type="radio" name="med-as" value="Parent"> Parent</label>
+        <label class="ri"><input type="radio" name="med-as" value="Guardian"> Guardian</label>
+        <label class="ri"><input type="radio" name="med-as" value="Caregiver"> Caregiver</label>
+      </div>
+      <span class="em" id="E-med-as">Required.</span>
+    </div>
+  </div>
+</div>
+<div class="nav">
+  <button class="btn bs" onclick="goTo(0)">← Back</button>
+  <button class="btn bp" onclick="nxt(1)">Continue to Photo Release →</button>
+</div>
+</div><!-- /s1 -->
+
+
+<!-- ══════ STEP 3 · PHOTO RELEASE ══════ -->
+<div class="step" id="s2">
+<div class="card">
+  <h2 class="stitle">Photo Release</h2>
+  <div class="lg">
+    I hereby consent to and authorize the use and reproduction by Positive Strides Therapeutic Riding Center, Inc. of any and all photographs and any other audiovisual materials taken of me/my child/my ward for promotional printed materials, educational activities, social media, Positive Strides website, or for any other use for the benefit of the program.
+  </div>
+  <div class="fg" style="margin-bottom:20px;">
+    <label class="L">Photo Release Decision <span class="rq">*</span></label>
+    <div class="cg" style="margin-top:6px;">
+      <label class="ri"><input type="radio" name="photo" value="Consent"> <strong>I do consent</strong> to use of photographs/audiovisual materials</label>
+      <label class="ri"><input type="radio" name="photo" value="No Consent"> <strong>I do not consent</strong></label>
+    </div>
+    <span class="em" id="E-photo">Please make a selection.</span>
+  </div>
+  <div class="sr">
+    <div class="fg">
+      <label class="L">Signature <span class="rq">*</span></label>
+      <div class="sw" id="sw-sig-photo">
+        <input type="text" class="si" id="sig-photo" autocomplete="off" placeholder="Type your full name">
+        <div class="sul"></div><span class="sc">Electronic signature — type your full legal name</span>
+      </div>
+      <span class="em" id="E-sig-photo">Signature is required.</span>
+    </div>
+    <div class="fg">
+      <label class="L" for="date-photo">Date <span class="rq">*</span></label>
+      <input type="date" id="date-photo">
+      <span class="em" id="E-date-photo">Required.</span>
+    </div>
+  </div>
+  <div class="r r2" style="margin-top:9px;">
+    <div class="fg">
+      <label class="L" for="pname-photo">Printed Name <span class="rq">*</span></label>
+      <input type="text" id="pname-photo" class="tc" autocomplete="off" placeholder="Client, parent, or guardian/caregiver">
+      <span class="em" id="E-pname-photo">Required.</span>
+    </div>
+    <div class="fg">
+      <label class="L" for="photo-phone">Phone</label>
+      <input type="tel" id="photo-phone" class="ph" placeholder="410-555-1234">
+    </div>
+  </div>
+</div>
+<div class="nav">
+  <button class="btn bs" onclick="goTo(1)">← Back</button>
+  <button class="btn bp" onclick="nxt(2)">Continue to Liability Waiver →</button>
+</div>
+</div><!-- /s2 -->
+
+
+<!-- ══════ STEP 4 · LIABILITY WAIVER ══════ -->
+<div class="step" id="s3">
+<div class="card">
+  <h2 class="wt">⚠ Waiver of Liability, Assumption of Risks &amp; Indemnification Agreement</h2>
+  <p class="wn">READ THIS ENTIRE AGREEMENT CAREFULLY BEFORE SIGNING.</p>
+  <p class="ssub">Positive Strides, Inc. · P.O. Box 391, Easton, MD 21601 · Revised 8/2/2025</p>
+
+  <div class="lg">
+    <h4>Waiver of Liability</h4>
+    <p>For the privilege of riding, handling, volunteering, working, and/or being around equines at Positive Strides, Inc. on the property owned by <strong>Kimberly Hopkins Thomas, Ashley Hopkins and Patricia McQuay</strong> (hereinafter "Property Owners") today and on all future dates, I, on behalf of myself, my family members, my heirs, personal representatives, or assigns, do hereby agree to release, waive, and discharge Positive Strides, Inc. and its directors, managers, employees, volunteers, and agents from any liability or responsibility for accident, damage, injury, or illnesses (including bacterial or viral, known or unknown at the time of this signing) to myself or any horse owned or leased by me, or to any family member or spectator accompanying me while on the premises of the property resulting from the inherent risks of equine activities or from the ordinary negligence (active or passive) of Positive Strides, Inc.</p>
+    <p>AND that except in the event of Positive Strides, Inc.'s or Property Owners' gross and/or willful negligence, I agree not to bring any claims, demands, actions and causes of action, and/or litigation, against Positive Strides, Inc. or Property Owners for any economic and noneconomic losses due to bodily injury, illnesses (viral or bacterial), death, and/or property damage sustained by me in relation to the premises and operations of Positive Strides, Inc.</p>
+    <h4>Assumption of Inherent Risks</h4>
+    <p>I understand and assume the inherent risks involved in equine activities, including those used for therapeutic purposes. These include but are not limited to:</p>
+    <ul>
+      <li>The propensity of any equine to behave in ways that may result in injury, harm, or death to persons on or around them</li>
+      <li>The unpredictability of an equine's reaction to sounds, sudden movements, and unfamiliar objects, persons or other animals</li>
+      <li>Certain hazards such as surface and subsurface objects; collisions with other equines, animals, people and objects</li>
+      <li>Limited availability of emergency medical care</li>
+      <li>The potential of a participant or spectator to act in a negligent manner that may contribute to injury</li>
+    </ul>
+    <h4>Indemnification</h4>
+    <p>I also agree to hold harmless, defend, and indemnify Positive Strides, Inc. and Property Owners (including costs associated with defending a suit, judgment, court costs, investigation costs, and reasonable attorney fees) from any and all claims arising from my injury, illness, or loss due to my participation as a rider, handler, or spectator.</p>
+    <h4>Health Status &amp; Emergency Care</h4>
+    <p>I assert that I have fully disclosed any chronic conditions and have provided a doctor's release permitting my participation (if applicable). I authorize Positive Strides, Inc. to administer emergency first aid, CPR, use an AED, secure emergency medical care or transportation, and share my medical history with emergency medical personnel when deemed necessary. I shall assume all costs of emergency medical care and transportation provided on my behalf.</p>
+    <h4>Rules &amp; Safety Equipment</h4>
+    <p>I agree to abide by all rules established by Positive Strides, Inc.; to wear an ASTM/SEI certified riding helmet at all times while mounted; and appropriate footwear at all times on the premises.</p>
+    <h4>Covenant Not to Sue; Mediation; Venue</h4>
+    <p>I covenant not to sue Positive Strides, Inc. or Property Owners for any present or future claim arising from my participation with equines. This Agreement shall be construed under the laws of the State of Maryland. Any action must be brought within one (1) year of the incident. Prior to litigation, the matter shall first be mediated equally at shared cost. In the event of litigation, all parties waive trial by jury. <strong>Facsimile and electronic signatures shall be accepted as an original signature.</strong></p>
+  </div>
+
+  <div class="fg" style="margin-bottom:17px;">
+    <label class="ci" style="font-size:.91rem;font-weight:500;text-transform:none;letter-spacing:0;align-items:flex-start;gap:8px;">
+      <input type="checkbox" id="waiver-ack" style="width:17px;height:17px;margin-top:2px;flex-shrink:0;accent-color:var(--blue);padding:0;border:none;box-shadow:none;">
+      <span>I have read this Participation Agreement in full and understand I am giving up substantial rights, including my right to sue. I intend my signature to be a complete and unconditional release of all liability to the greatest extent allowed by Maryland law. <span class="rq" style="color:var(--err)">*</span></span>
+    </label>
+    <span class="em" id="E-waiver-ack">You must acknowledge that you have read and understood the agreement.</span>
+  </div>
+
+  <div class="sr">
+    <div class="fg">
+      <label class="L">Participant's Signature <span class="rq">*</span></label>
+      <div class="sw" id="sw-sig-waiver">
+        <input type="text" class="si" id="sig-waiver" autocomplete="off" placeholder="Type your full name">
+        <div class="sul"></div><span class="sc">Electronic signature — type your full legal name</span>
+      </div>
+      <span class="em" id="E-sig-waiver">Signature is required.</span>
+    </div>
+    <div class="fg">
+      <label class="L" for="date-waiver">Date of Signing <span class="rq">*</span></label>
+      <input type="date" id="date-waiver">
+      <span class="em" id="E-date-waiver">Required.</span>
+    </div>
+  </div>
+  <div class="r r2" style="margin-top:9px;">
+    <div class="fg">
+      <label class="L" for="pname-waiver">Participant's Printed Name <span class="rq">*</span></label>
+      <input type="text" id="pname-waiver" class="tc" autocomplete="off" placeholder="Print legibly">
+      <span class="em" id="E-pname-waiver">Required.</span>
+    </div>
+    <div class="fg">
+      <label class="L">Signing as: <span class="rq">*</span></label>
+      <div class="cg" style="margin-top:4px;">
+        <label class="ri"><input type="radio" name="waiver-as" value="Client"> Client</label>
+        <label class="ri"><input type="radio" name="waiver-as" value="Guest/Spectator"> Guest/Spectator</label>
+      </div>
+      <span class="em" id="E-waiver-as">Required.</span>
+    </div>
+  </div>
+
+  <h3 class="sh">Parent / Legal Guardian Signature</h3>
+  <p style="font-size:.83rem;color:var(--gray);margin-bottom:13px;">If the participant is a minor (under 18) or legally vulnerable person, the parent/guardian signature below waives both the minor's rights and the parent/guardian's rights pursuant to this Agreement.</p>
+  <div class="sr">
+    <div class="fg">
+      <label class="L">Parent/Guardian Signature</label>
+      <div class="sw" id="sw-sig-guard">
+        <input type="text" class="si" id="sig-guard" autocomplete="off" placeholder="Type your full name">
+        <div class="sul"></div><span class="sc">Electronic signature — type your full legal name</span>
+      </div>
+    </div>
+    <div class="fg">
+      <label class="L" for="date-guard">Date</label>
+      <input type="date" id="date-guard">
+    </div>
+  </div>
+  <div class="r r2" style="margin-top:9px;">
+    <div class="fg">
+      <label class="L" for="pname-guard">Parent/Guardian Printed Name</label>
+      <input type="text" id="pname-guard" class="tc" autocomplete="off" placeholder="Print legibly">
+    </div>
+    <div class="fg">
+      <label class="L">Relationship:</label>
+      <div class="cg" style="margin-top:4px;">
+        <label class="ri"><input type="radio" name="guard-role" value="Parent"> Parent</label>
+        <label class="ri"><input type="radio" name="guard-role" value="Legal Guardian"> Legal Guardian</label>
+        <label class="ri"><input type="radio" name="guard-role" value="Caregiver"> Caregiver</label>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="sh">Witness</h3>
+  <div class="sr">
+    <div class="fg">
+      <label class="L">Witness Signature</label>
+      <div class="sw" id="sw-sig-wit">
+        <input type="text" class="si" id="sig-wit" autocomplete="off" placeholder="Type your full name">
+        <div class="sul"></div><span class="sc">Electronic signature — type your full legal name</span>
+      </div>
+    </div>
+    <div class="fg">
+      <label class="L" for="date-wit">Date</label>
+      <input type="date" id="date-wit">
+    </div>
+  </div>
+  <div class="r" style="margin-top:9px;">
+    <div class="fg">
+      <label class="L" for="pname-wit">Witness Printed Name</label>
+      <input type="text" id="pname-wit" class="tc" autocomplete="off" placeholder="Print legibly">
+    </div>
+  </div>
+</div>
+<div class="nav">
+  <button class="btn bs" onclick="goTo(2)">← Back</button>
+  <button class="btn bs" onclick="printSection('s3')" style="border-color:#888;color:#555;">🖨 Print This Waiver</button>
+  <button class="btn bp" onclick="nxt(3)">Continue to Farm Waiver →</button>
+</div>
+</div><!-- /s3 -->
+
+
+<!-- ══════ STEP 5 · FARM WAIVER ══════ -->
+<div class="step" id="s4">
+<div class="card">
+  <h2 class="wt">⚠ Farm Waiver</h2>
+  <p class="wn">READ THIS AGREEMENT CAREFULLY BEFORE SIGNING.</p>
+  <p class="ssub">Timber Grove Farm · 6292 Statum Road, Preston, Maryland 21655</p>
+
+  <div class="lg">
+    <p>This waiver declares that Ashley Hopkins and Kimberly Hopkins nor anyone associated with Ashley Hopkins, Kimberly Hopkins or Timber Grove Farm is not liable for any injury or accident that may occur while participating in riding or driving lessons, working around farm animals or visiting the premises.</p>
+    <p><strong>I UNDERSTAND</strong> that I am voluntarily participating / or allowing my minor child to participate in a sport that is considered dangerous and can result in serious injury. I realize that when riding or driving, a predator (man) attempts to dominate and control an animal of prey (horse/pony) that is normally ten times larger, stronger and faster.</p>
+    <p><strong>I UNDERSTAND</strong> that the nature of stable horses is unpredictable. The horse/pony can shy, rear, buck, and attempt to throw a rider or driver without warning. No horse/pony is considered completely safe and can cause injury or accident at any time.</p>
+    <p><strong>I UNDERSTAND</strong> that I will adhere strictly to guidelines set forth by Ashley Hopkins and Kimberly Hopkins, and that adhering to those guidelines does not ensure my safety or the safety of those with me.</p>
+    <p><strong>I UNDERSTAND</strong> that Ashley Hopkins and Kimberly Hopkins nor anyone associated with the riding facility is NOT liable for any accident or injury to me, my minor child, or any siblings or guests that may accompany me to the premises. I enter into this agreement and participate at MY OWN RISK and will not attempt to sue Ashley Hopkins, Kimberly Hopkins nor anyone associated with them.</p>
+  </div>
+
+  <div class="fg" style="margin-bottom:16px;">
+    <label class="ci" style="font-size:.91rem;font-weight:500;text-transform:none;letter-spacing:0;align-items:flex-start;gap:8px;">
+      <input type="checkbox" id="farm-ack" style="width:17px;height:17px;margin-top:2px;flex-shrink:0;accent-color:var(--blue);padding:0;border:none;box-shadow:none;">
+      <span>I have read and understand the Farm Waiver above and agree to its terms. <span class="rq" style="color:var(--err)">*</span></span>
+    </label>
+    <span class="em" id="E-farm-ack">You must acknowledge that you have read and understood the farm waiver.</span>
+  </div>
+
+  <!-- Global error summary -->
+  <div class="esum" id="g-errors">
+    <h4>⚠ Please correct the following before submitting:</h4>
+    <ul id="g-list"></ul>
+  </div>
+
+  <h3 class="sh">Farm Liability Signature</h3>
+  <div class="sr">
+    <div class="fg">
+      <label class="L">Signature <span class="rq">*</span></label>
+      <div class="sw" id="sw-sig-farm">
+        <input type="text" class="si" id="sig-farm" autocomplete="off" placeholder="Type your full name">
+        <div class="sul"></div><span class="sc">Electronic signature — type your full legal name</span>
+      </div>
+      <span class="em" id="E-sig-farm">Signature is required.</span>
+    </div>
+    <div class="fg">
+      <label class="L" for="date-farm">Date <span class="rq">*</span></label>
+      <input type="date" id="date-farm">
+      <span class="em" id="E-date-farm">Required.</span>
+    </div>
+  </div>
+  <div class="r" style="margin-top:9px;margin-bottom:20px;">
+    <div class="fg">
+      <label class="L" for="pname-farm">Printed Name <span class="rq">*</span></label>
+      <input type="text" id="pname-farm" class="tc" autocomplete="off" placeholder="Print legibly">
+      <span class="em" id="E-pname-farm">Required.</span>
+    </div>
+  </div>
+
+  <h3 class="sh">For Minor Child – Parent/Guardian Signature</h3>
+  <p style="font-size:.83rem;color:var(--gray);margin-bottom:13px;">Complete this section if signing on behalf of a minor child.</p>
+  <div class="sr">
+    <div class="fg">
+      <label class="L">Parent/Guardian Signature</label>
+      <div class="sw" id="sw-sig-farm-g">
+        <input type="text" class="si" id="sig-farm-g" autocomplete="off" placeholder="Type your full name">
+        <div class="sul"></div><span class="sc">Electronic signature — type your full legal name</span>
+      </div>
+    </div>
+    <div class="fg">
+      <label class="L" for="date-farm-g">Date</label>
+      <input type="date" id="date-farm-g">
+    </div>
+  </div>
+  <div class="r" style="margin-top:9px;">
+    <div class="fg">
+      <label class="L" for="pname-farm-g">Parent/Guardian Printed Name</label>
+      <input type="text" id="pname-farm-g" class="tc" autocomplete="off" placeholder="Print legibly">
+    </div>
+  </div>
+</div>
+<div class="nav">
+  <button class="btn bs" onclick="goTo(3)">← Back</button>
+  <button class="btn bs" onclick="printSection('s4')" style="border-color:#888;color:#555;">🖨 Print This Waiver</button>
+  <button class="btn bsub" id="sub-btn" onclick="submitAll()">✓ Submit Application</button>
+</div>
+</div><!-- /s4 -->
+
+
+<!-- ══════ SUCCESS ══════ -->
+<div id="success" style="display:none;">
+  <div class="card" style="text-align:center;padding:44px 32px;">
+    <div style="width:68px;height:68px;background:var(--blue);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:1.8rem;color:#fff;">✓</div>
+    <h2 style="font-family:'Playfair Display',serif;font-size:1.8rem;color:var(--navy);margin-bottom:10px;">Application Submitted!</h2>
+    <p style="color:var(--gray);font-size:.99rem;line-height:1.7;max-width:450px;margin:0 auto 8px;">Thank you for completing the Positive Strides new rider application. A copy has been sent to your email, and our team will be in touch soon.</p>
+    <p style="color:var(--gray);font-size:.85rem;margin-bottom:24px;">(If you don't see the email within a few minutes, check your spam folder.)</p>
+    <button onclick="window.print()" style="display:inline-flex;align-items:center;gap:6px;padding:10px 24px;background:var(--blue);color:#fff;border:none;border-radius:6px;font-family:'Source Sans 3',sans-serif;font-size:.93rem;font-weight:600;cursor:pointer;margin-bottom:24px;">🖨 Print / Save PDF Copy</button>
+    <div style="display:inline-block;text-align:left;background:#ddeef8;border-radius:8px;padding:16px 22px;font-size:.89rem;color:var(--navy);line-height:1.7;">
+      <strong>Questions?</strong><br>
+      Positive Strides Therapeutic Riding Center, Inc.<br>
+      P.O. Box 391 · Easton, MD 21601 · (443) 239-4953<br>
+      <a href="https://positivestridescenter.org" style="color:var(--blue);">positivestridescenter.org</a>
+    </div>
+  </div>
+</div>
+
+</div><!-- /.wrap -->
+<script>
+// ─────────────────────────────────────────────
+// HELPERS
+// ─────────────────────────────────────────────
+let cur = 0;
+
+// show/hide element by id
+function sh(id, show) {
+  var el = document.getElementById(id);
+  if (el) el.style.display = show ? 'block' : 'none';
+}
+
+// get trimmed value
+function gv(id) {
+  var el = document.getElementById(id);
+  return el ? el.value.trim() : '';
+}
+
+// get checked radio value
+function gr(name) {
+  var el = document.querySelector('input[name="' + name + '"]:checked');
+  return el ? el.value : '';
+}
+
+// get checkbox state
+function gc(id) {
+  var el = document.getElementById(id);
+  return el ? el.checked : false;
+}
+
+// title case
+function tc(s) {
+  return s.replace(/\b\w/g, function(c){ return c.toUpperCase(); }).replace(/\B\w/g, function(c){ return c.toLowerCase(); });
+}
+
+// phone format XXX-XXX-XXXX
+function fmtPh(e) {
+  var d = e.target.value.replace(/\D/g,'').substring(0,10);
+  if (d.length >= 7)      d = d.slice(0,3)+'-'+d.slice(3,6)+'-'+d.slice(6);
+  else if (d.length >= 4) d = d.slice(0,3)+'-'+d.slice(3);
+  e.target.value = d;
+}
+
+// ─────────────────────────────────────────────
+// ERROR DISPLAY
+// ─────────────────────────────────────────────
+function setE(id, msg, on) {
+  var inp = document.getElementById(id);
+  var err = document.getElementById('E-' + id);
+  if (inp) inp.classList.toggle('E', on);
+  if (err) { if (msg) err.textContent = msg; err.classList.toggle('on', on); }
+}
+
+function clrE(id) { setE(id, '', false); }
+
+// validate required text/date/select — true = valid
+function rq(id, msg) {
+  var ok = gv(id).length > 0;
+  setE(id, msg || 'This field is required.', !ok);
+  return ok;
+}
+
+// validate typed signature (min 2 chars)
+function rqSig(id, msg) {
+  var ok = gv(id).length >= 2;
+  var w = document.getElementById('sw-' + id);
+  var e = document.getElementById('E-' + id);
+  if (w) w.classList.toggle('E', !ok);
+  if (e) { if (msg) e.textContent = msg; e.classList.toggle('on', !ok); }
+  return ok;
+}
+
+// validate radio group
+function rqR(name, errId, msg) {
+  var ok = gr(name).length > 0;
+  var e = document.getElementById(errId);
+  if (e) { if (msg) e.textContent = msg; e.classList.toggle('on', !ok); }
+  return ok;
+}
+
+// validate checkbox
+function rqC(id, msg) {
+  var ok = gc(id);
+  var e = document.getElementById('E-' + id);
+  if (e) { if (msg) e.textContent = msg; e.classList.toggle('on', !ok); }
+  return ok;
+}
+
+function scrollErr() {
+  var el = document.querySelector('.E, .em.on');
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+// ─────────────────────────────────────────────
+// PER-STEP VALIDATION
+// ─────────────────────────────────────────────
+function vStep(s) {
+  var ok = true;
+  if (s === 0) {
+    if (!rq('rider-name',  "Rider's full name is required."))     ok = false;
+    if (!rq('rider-dob',   "Date of birth is required."))         ok = false;
+    if (!rq('rider-street','Street address is required.'))          ok = false;
+    if (!rq('rider-city',  'City is required.'))                    ok = false;
+    if (!rq('rider-state', 'State is required.'))                   ok = false;
+    if (!rq('rider-zip',   'ZIP code is required.'))                ok = false;
+    if (!rq('rider-phone', 'Phone number is required.'))            ok = false;
+    if (!rq('rider-email', 'Email address is required.'))           ok = false;
+    if (!rq('c1-role',     "Please select a relationship."))      ok = false;
+    if (!rq('c1-name',     "Primary contact name is required."))  ok = false;
+    if (!rqR('conviction', 'E-conviction', "Please answer this question.")) ok = false;
+    if (!rq('diagnoses',   "Diagnoses / information is required.")) ok = false;
+    if (!rqR('completed-by','E-completed-by',"Please indicate who is completing this form.")) ok = false;
+    if (!rqSig('sig-reg',  "Signature is required — type your full legal name.")) ok = false;
+    if (!rq('date-reg',    "Date is required."))                  ok = false;
+    if (!rq('pname-reg',   "Printed name is required."))          ok = false;
+  }
+  if (s === 1) {
+    if (!rq('med-name',   "Rider's name is required."))           ok = false;
+    if (!rq('med-street', 'Street address is required.'))          ok = false;
+    if (!rq('med-city',   'City is required.'))                     ok = false;
+    if (!rq('ec1-name',   "Emergency contact name is required.")) ok = false;
+    if (!rq('ec1-phone',  "Emergency contact phone is required."))ok = false;
+    if (!rq('phys-name',  "Physician's name is required."))       ok = false;
+    if (!rq('phys-phone', "Physician's phone is required."))      ok = false;
+    if (!rqR('consent','E-consent',"Please select a consent plan.")) ok = false;
+    if (!rqSig('sig-med', "Signature is required."))              ok = false;
+    if (!rq('date-med',   "Date is required."))                   ok = false;
+    if (!rq('pname-med',  "Printed name is required."))           ok = false;
+    if (!rqR('med-as','E-med-as',"Please indicate who is signing.")) ok = false;
+  }
+  if (s === 2) {
+    if (!rqR('photo','E-photo',"Please select a photo release option.")) ok = false;
+    if (!rqSig('sig-photo',"Signature is required.")) ok = false;
+    if (!rq('date-photo', "Date is required."))       ok = false;
+    if (!rq('pname-photo',"Printed name is required.")) ok = false;
+  }
+  if (s === 3) {
+    if (!rqC('waiver-ack',"You must acknowledge that you have read and understood the agreement.")) ok = false;
+    if (!rqSig('sig-waiver',"Signature is required.")) ok = false;
+    if (!rq('date-waiver', "Date is required."))        ok = false;
+    if (!rq('pname-waiver',"Printed name is required.")) ok = false;
+    if (!rqR('waiver-as','E-waiver-as',"Please indicate who is signing.")) ok = false;
+  }
+  if (s === 4) {
+    if (!rqC('farm-ack',"You must acknowledge that you have read and understood the farm waiver.")) ok = false;
+    if (!rqSig('sig-farm',"Signature is required.")) ok = false;
+    if (!rq('date-farm', "Date is required."))       ok = false;
+    if (!rq('pname-farm',"Printed name is required.")) ok = false;
+  }
+  if (!ok) scrollErr();
+  return ok;
+}
+
+// ─────────────────────────────────────────────
+// NAVIGATION
+// ─────────────────────────────────────────────
+function goTo(n) {
+  document.querySelectorAll('.step').forEach(function(s){ s.classList.remove('active'); });
+  document.querySelectorAll('.pnav button').forEach(function(b, i){
+    b.classList.remove('active');
+    if (i < n) b.classList.add('done'); else b.classList.remove('done');
+  });
+  var s = document.getElementById('s' + n);
+  var t = document.getElementById('t' + n);
+  if (s) s.classList.add('active');
+  if (t) t.classList.add('active');
+  cur = n;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function nxt(from) {
+  if (!vStep(from)) return;
+  document.getElementById('t' + from).classList.add('done');
+  if (from === 0) autoFill();
+  goTo(from + 1);
+}
+
+// ─────────────────────────────────────────────
+// AUTO-POPULATE RIDER → MEDICAL AUTH
+// ─────────────────────────────────────────────
+function autoFill() {
+  function cp(to, from) {
+    var t = document.getElementById(to);
+    var f = document.getElementById(from);
+    if (t && f && !t.value) t.value = f.value;
+  }
+  cp('med-name',  'rider-name');
+  cp('med-dob',   'rider-dob');
+  cp('med-street', 'rider-street');
+  cp('med-city',   'rider-city');
+  cp('med-state',  'rider-state');
+  cp('med-zip',    'rider-zip');
+  cp('med-phone',  'rider-phone');
+  cp('med-email',  'rider-email');
+}
+
+// ─────────────────────────────────────────────
+// COLLECT ALL FORM DATA AS TEXT
+// ─────────────────────────────────────────────
+function allChecked(name) {
+  var els = document.querySelectorAll('input[name="' + name + '"]:checked');
+  return els.length ? Array.from(els).map(function(e){ return e.value; }).join(', ') : '—';
+}
+
+function buildMsg() {
+  var v  = function(id) { return gv(id) || '—'; };
+  var vr = function(name) { return gr(name) || '—'; };
+  var line = '═══════════════════════════════════════════════════════';
+  var dash = '───────────────────────────────────────────────────────';
+  var L    = function(label, val) { return label + ': ' + (val || '—'); };
+
+  // equipment checkboxes
+  var equipItems = document.querySelectorAll('input[name="equip"]:checked');
+  var equip = equipItems.length ? Array.from(equipItems).map(function(e){ return e.value; }).join(', ') : '—';
+
+  // education checkboxes
+  var eduItems = document.querySelectorAll('input[name="edu"]:checked');
+  var edu = eduItems.length ? Array.from(eduItems).map(function(e){ return e.value; }).join(', ') : '—';
+
+  var addr = v('rider-street') + ', ' + v('rider-city') + ', ' + v('rider-state') + ' ' + v('rider-zip');
+  var medAddr = v('med-street') + ', ' + v('med-city') + (gv('med-state') ? ', ' + v('med-state') : '') + (gv('med-zip') ? ' ' + v('med-zip') : '');
+
+  var lines = [
+    line,
+    '  POSITIVE STRIDES THERAPEUTIC RIDING CENTER, INC.',
+    '  P.O. Box 391, Easton, MD 21601  |  (443) 239-4953',
+    '  positivestridescenter.org',
+    line,
+    '  NEW RIDER APPLICATION',
+    '  Submitted: ' + new Date().toLocaleString(),
+    line,
+    '',
+
+    // ── SECTION 1: REGISTRATION ──────────────────────────
+    '╔══ SECTION 1: RIDER REGISTRATION ══════════════════╗',
+    '',
+    '  RIDER INFORMATION',
+    dash,
+    L('  Rider\'s Full Name', v('rider-name')),
+    L('  Date of Birth',     v('rider-dob')),
+    L('  Address',           addr),
+    L('  Phone',             v('rider-phone')),
+    L('  Email',             v('rider-email')),
+    '',
+    '  PRIMARY CONTACT',
+    dash,
+    L('  Relationship to Rider', v('c1-role')),
+    L('  Name',    v('c1-name')),
+    L('  Address', gv('c1-addr') || 'Same as rider'),
+    L('  Phone',   v('c1-phone')),
+    L('  Email',   v('c1-email')),
+    '',
+    '  SECONDARY CONTACT',
+    dash,
+    L('  Relationship to Rider', v('c2-role')),
+    L('  Name',  v('c2-name')),
+    L('  Phone', v('c2-phone')),
+    L('  Email', v('c2-email')),
+    '',
+    '  SCHOOL / INSTITUTION',
+    dash,
+    L('  School or Institution', v('school-name')),
+    L('  School Phone',          v('school-phone')),
+    '',
+    '  PRIOR EAAT EXPERIENCE',
+    dash,
+    L('  Has rider participated in EAAT previously', vr('eaat')),
+    gv('eaat-exp') ? L('  Details', v('eaat-exp')) : '',
+    '',
+    '  BACKGROUND',
+    dash,
+    L('  Has rider ever been convicted of a crime against another person', vr('conviction')),
+    gv('conv-exp') ? L('  Details', v('conv-exp')) : '',
+    '',
+    '  DEMOGRAPHICS  (for grant/funding tracking only)',
+    dash,
+    L('  Rider\'s Ethnicity',      v('ethnicity')),
+    L('  Rider\'s Military Status', v('mil-status')),
+    L('  Family Member Military',   vr('fam-mil') + (gv('fam-mil-rel') ? ' — Relationship: ' + v('fam-mil-rel') : '')),
+    L('  Education Level',         edu),
+    L('  Household Income Range',  vr('income')),
+    '',
+    '  DIAGNOSES & ADDITIONAL INFORMATION',
+    dash,
+    v('diagnoses'),
+    '',
+    '  EQUIPMENT',
+    dash,
+    L('  Equipment Needed', equip),
+    L('  Shoe Size',        v('shoe-size')),
+    '',
+    '  FORM COMPLETED BY',
+    dash,
+    L('  Role',         vr('completed-by')),
+    L('  Signature',    v('sig-reg')),
+    L('  Printed Name', v('pname-reg')),
+    L('  Date',         v('date-reg')),
+    '',
+
+    // ── SECTION 2: MEDICAL AUTH ──────────────────────────
+    '╔══ SECTION 2: AUTHORIZATION FOR EMERGENCY MEDICAL TREATMENT ══╗',
+    '',
+    '  RIDER INFORMATION',
+    dash,
+    L('  Rider\'s Name',   v('med-name')),
+    L('  Date of Birth',  v('med-dob')),
+    L('  Address',        medAddr),
+    L('  Phone',          v('med-phone')),
+    L('  Email',          v('med-email')),
+    '',
+    '  EMERGENCY CONTACTS',
+    dash,
+    L('  Contact 1 — Name',  v('ec1-name')),
+    L('  Contact 1 — Phone', v('ec1-phone')),
+    L('  Contact 2 — Name',  v('ec2-name')),
+    L('  Contact 2 — Phone', v('ec2-phone')),
+    '',
+    '  PHYSICIAN & INSURANCE',
+    dash,
+    L('  Physician\'s Name',        v('phys-name')),
+    L('  Physician\'s Phone',       v('phys-phone')),
+    L('  Health Insurance Company', v('ins-co')),
+    L('  Policy Number',            v('ins-pol')),
+    '',
+    '  CONSENT PLAN',
+    dash,
+    L('  Selection', vr('consent')),
+    gv('nc-inst') ? L('  Non-Consent Instructions', v('nc-inst')) : '',
+    '',
+    '  MEDICAL AUTHORIZATION SIGNATURE',
+    dash,
+    L('  Signature',    v('sig-med')),
+    L('  Printed Name', v('pname-med')),
+    L('  Signing as',   vr('med-as')),
+    L('  Date',         v('date-med')),
+    '',
+
+    // ── SECTION 3: PHOTO RELEASE ─────────────────────────
+    '╔══ SECTION 3: PHOTO RELEASE ════════════════════════╗',
+    '',
+    dash,
+    L('  Decision',      vr('photo')),
+    L('  Signature',     v('sig-photo')),
+    L('  Printed Name',  v('pname-photo')),
+    L('  Phone',         v('photo-phone')),
+    L('  Date',          v('date-photo')),
+    '',
+
+    // ── SECTION 4: LIABILITY WAIVER ──────────────────────
+    '╔══ SECTION 4: WAIVER OF LIABILITY, ASSUMPTION OF RISKS & INDEMNIFICATION ══╗',
+    '',
+    '  PARTICIPANT SIGNATURE',
+    dash,
+    L('  Agreement Acknowledged', gc('waiver-ack') ? 'Yes' : 'No'),
+    L('  Signing as',             vr('waiver-as')),
+    L('  Signature',              v('sig-waiver')),
+    L('  Printed Name',           v('pname-waiver')),
+    L('  Date of Signing',        v('date-waiver')),
+    '',
+    '  PARENT / LEGAL GUARDIAN SIGNATURE  (if participant is a minor)',
+    dash,
+    L('  Relationship',  vr('guard-role')),
+    L('  Signature',     v('sig-guard')),
+    L('  Printed Name',  v('pname-guard')),
+    L('  Date',          v('date-guard')),
+    '',
+    '  WITNESS',
+    dash,
+    L('  Signature',    v('sig-wit')),
+    L('  Printed Name', v('pname-wit')),
+    L('  Date',         v('date-wit')),
+    '',
+
+    // ── SECTION 5: FARM WAIVER ───────────────────────────
+    '╔══ SECTION 5: FARM WAIVER — TIMBER GROVE FARM ══════╗',
+    '  6292 Statum Road, Preston, Maryland 21655',
+    '',
+    '  ADULT / SELF SIGNATURE',
+    dash,
+    L('  Agreement Acknowledged', gc('farm-ack') ? 'Yes' : 'No'),
+    L('  Signature',    v('sig-farm')),
+    L('  Printed Name', v('pname-farm')),
+    L('  Date',         v('date-farm')),
+    '',
+    '  PARENT / GUARDIAN SIGNATURE  (for minor child)',
+    dash,
+    L('  Signature',    v('sig-farm-g')),
+    L('  Printed Name', v('pname-farm-g')),
+    L('  Date',         v('date-farm-g')),
+    '',
+    line,
+    '  END OF APPLICATION',
+    line
+  ];
+
+  // Remove consecutive blank lines and filter empty strings from conditional fields
+  return lines.filter(function(l, i, arr){
+    if (l === '' && arr[i-1] === '') return false;
+    return true;
+  }).join('\n');
+}
+
+// ─────────────────────────────────────────────
+// FULL-FORM CROSS-CHECK (all steps on submit)
+// ─────────────────────────────────────────────
+function crossCheck() {
+  var errors = [];
+  function ck(id, label) { if (!gv(id)) errors.push(label); }
+  function ckR(nm, label) { if (!gr(nm)) errors.push(label); }
+  function ckS(id, label) { if (gv(id).length < 2) errors.push(label); }
+  function ckC(id, label) { if (!gc(id)) errors.push(label); }
+
+  ck('rider-name',   'Registration: Rider\'s full name');
+  ck('rider-dob',    'Registration: Date of birth');
+  ck('rider-street', 'Registration: Street address');
+  ck('rider-city',   'Registration: City');
+  ck('rider-state',  'Registration: State');
+  ck('rider-zip',    'Registration: ZIP code');
+  ck('rider-phone',  'Registration: Phone number');
+  ck('rider-email',  'Registration: Email address');
+  ck('c1-role',      'Registration: Primary contact relationship');
+  ck('c1-name',      'Registration: Primary contact name');
+  ckR('conviction',  'Registration: Crime conviction question');
+  ck('diagnoses',    'Registration: Diagnoses / information');
+  ckR('completed-by','Registration: Who is completing this form');
+  ckS('sig-reg',     'Registration: Signature');
+  ck('date-reg',     'Registration: Date');
+  ck('pname-reg',    'Registration: Printed name');
+
+  ck('med-name',    'Medical Auth.: Rider\'s name');
+  ck('med-street',  'Medical Auth.: Street address');
+  ck('med-city',    'Medical Auth.: City');
+  ck('ec1-name',    'Medical Auth.: Emergency contact 1 name');
+  ck('ec1-phone',   'Medical Auth.: Emergency contact 1 phone');
+  ck('phys-name',   'Medical Auth.: Physician\'s name');
+  ck('phys-phone',  'Medical Auth.: Physician\'s phone');
+  ckR('consent',    'Medical Auth.: Consent plan');
+  ckS('sig-med',    'Medical Auth.: Signature');
+  ck('date-med',    'Medical Auth.: Date');
+  ck('pname-med',   'Medical Auth.: Printed name');
+  ckR('med-as',     'Medical Auth.: Who is signing');
+
+  ckR('photo',      'Photo Release: Decision');
+  ckS('sig-photo',  'Photo Release: Signature');
+  ck('date-photo',  'Photo Release: Date');
+  ck('pname-photo', 'Photo Release: Printed name');
+
+  ckC('waiver-ack', 'Liability Waiver: Acknowledgement');
+  ckS('sig-waiver', 'Liability Waiver: Signature');
+  ck('date-waiver', 'Liability Waiver: Date');
+  ck('pname-waiver','Liability Waiver: Printed name');
+  ckR('waiver-as',  'Liability Waiver: Who is signing');
+
+  ckC('farm-ack',   'Farm Waiver: Acknowledgement');
+  ckS('sig-farm',   'Farm Waiver: Signature');
+  ck('date-farm',   'Farm Waiver: Date');
+  ck('pname-farm',  'Farm Waiver: Printed name');
+
+  return errors;
+}
+
+// ─────────────────────────────────────────────
+// SUBMIT
+// ─────────────────────────────────────────────
+function submitAll() {
+  if (!vStep(4)) return;
+
+  var errors = crossCheck();
+  var sumEl  = document.getElementById('g-errors');
+  var listEl = document.getElementById('g-list');
+
+  if (errors.length > 0) {
+    listEl.innerHTML = errors.map(function(e){ return '<li>' + e + '</li>'; }).join('');
+    sumEl.classList.add('on');
+    sumEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    // Jump to the first step with an error
+    var steps = ['Registration','Medical Auth.','Photo Release','Liability Waiver','Farm Waiver'];
+    for (var s = 0; s < 5; s++) {
+      var prefix = steps[s];
+      var found = errors.some(function(e){ return e.indexOf(prefix) === 0; });
+      if (found) {
+        goTo(s);
+        setTimeout(function(ss){ return function(){ vStep(ss); scrollErr(); }; }(s), 100);
+        break;
+      }
+    }
+    return;
+  }
+  sumEl.classList.remove('on');
+
+  var btn = document.getElementById('sub-btn');
+  btn.disabled = true;
+  btn.textContent = 'Submitting…';
+
+  var applicantEmail = gv('c1-email') || gv('rider-email') || '';
+  var riderName      = gv('rider-name');
+  var msg            = buildMsg();
+
+  // Send emails via EmailJS
+  (function() {
+    if (typeof emailjs === 'undefined' || EJS_KEY === 'YOUR_PUBLIC_KEY') {
+      console.log('EmailJS not configured — form data:\n' + msg);
+      showSuccess();
+      return;
+    }
+    emailjs.init({ publicKey: EJS_KEY });
+    // NOTE: The EmailJS template To Email field should be hardcoded to positivestridesoffice@gmail.com
+    // Send to office (to_email in template should be hardcoded; to_email param used as fallback variable)
+    emailjs.send(EJS_SERVICE, EJS_TEMPLATE, {
+      to_email:  OFFICE_EMAIL,
+      from_name: riderName,
+      reply_to:  applicantEmail || OFFICE_EMAIL,
+      subject:   'New Rider Application — ' + riderName,
+      message:   msg
+    }).then(function() {
+      // Send copy to applicant if email provided
+      if (applicantEmail) {
+        return emailjs.send(EJS_SERVICE, EJS_TEMPLATE, {
+          to_email:  applicantEmail,
+          from_name: 'Positive Strides Center',
+          reply_to:  OFFICE_EMAIL,
+          subject:   'Your Positive Strides Application — ' + riderName,
+          message:   'Thank you for submitting your application for ' + riderName + '.\nA copy of your application is included below for your records.\n\n' + msg
+        });
+      }
+    }).then(function() {
+      showSuccess();
+    }).catch(function(err) {
+      console.error('EmailJS error:', err);
+      alert('Your application was received, but there was a problem sending the confirmation email. Error: ' + JSON.stringify(err) + '\n\nPlease contact positivestridesoffice@gmail.com to confirm receipt.');
+      showSuccess();
+    });
+  })();
+}
+
+function showSuccess() {
+  var wrap = document.querySelector('.wrap');
+  var succ = document.getElementById('success');
+  wrap.innerHTML = '';
+  succ.style.display = 'block';
+  wrap.appendChild(succ);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ─────────────────────────────────────────────
+// SELF FILL — copy rider name to c1-name when "Self" selected
+// ─────────────────────────────────────────────
+function selfFill() {
+  var role = gv('c1-role');
+  var c1name = document.getElementById('c1-name');
+  if (role === 'Self (adult rider)' && c1name && !c1name.value) {
+    c1name.value = gv('rider-name');
+  }
+}
+
+// ─────────────────────────────────────────────
+// AUTO-POPULATE PRINTED NAME from signature
+// ─────────────────────────────────────────────
+var sigToPname = {
+  'sig-reg':   'pname-reg',
+  'sig-med':   'pname-med',
+  'sig-photo': 'pname-photo',
+  'sig-waiver':'pname-waiver',
+  'sig-guard': 'pname-guard',
+  'sig-wit':   'pname-wit',
+  'sig-farm':  'pname-farm',
+  'sig-farm-g':'pname-farm-g'
+};
+
+// ─────────────────────────────────────────────
+// PRINT SINGLE SECTION
+// ─────────────────────────────────────────────
+function printSection(stepId) {
+  // Show only the requested section for printing
+  var allSteps = document.querySelectorAll('.step');
+  var allNavs  = document.querySelectorAll('.nav');
+  allSteps.forEach(function(s){ s.style.display = 'none'; });
+  allNavs.forEach(function(n){ n.style.display = 'none'; });
+  var target = document.getElementById(stepId);
+  if (target) target.style.display = 'block';
+  window.print();
+  // Restore
+  setTimeout(function(){
+    allSteps.forEach(function(s){ s.style.display = ''; });
+    allNavs.forEach(function(n){ n.style.display = ''; });
+    // Re-hide all steps except current
+    document.querySelectorAll('.step').forEach(function(s){ s.classList.remove('active'); });
+    var cur_step = document.getElementById('s' + cur);
+    if (cur_step) cur_step.classList.add('active');
+  }, 1000);
+}
+
+// ─────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', function() {
+
+  // Force-clear fields the browser insists on autofilling
+  // Browsers autofill after DOMContentLoaded, so we clear after a short delay
+  setTimeout(function() {
+    var neverFill = ['school-name', 'school-phone', 'c1-addr', 'c2-name',
+                     'c2-addr', 'c2-phone', 'c2-email', 'ins-co', 'ins-pol',
+                     'mil-status', 'fam-mil-rel', 'shoe-size', 'conv-exp', 'eaat-exp'];
+    neverFill.forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el && el.value && el.value === gv('rider-name')) el.value = '';
+    });
+    // Specifically always clear school-name and school-phone
+    var sn = document.getElementById('school-name');
+    var sp = document.getElementById('school-phone');
+    if (sn) sn.value = '';
+    if (sp) sp.value = '';
+  }, 300);
+
+  // Set today's date in all date inputs
+  var today = new Date().toISOString().split('T')[0];
+  document.querySelectorAll('input[type="date"]').forEach(function(el) {
+    if (!el.value) el.value = today;
+  });
+
+  // Phone formatting
+  document.querySelectorAll('.ph').forEach(function(el) {
+    el.addEventListener('input', fmtPh);
+  });
+
+  // Title case on blur
+  document.querySelectorAll('.tc').forEach(function(el) {
+    el.addEventListener('blur', function() {
+      if (el.value) el.value = tc(el.value);
+    });
+  });
+
+  // Signature inputs: clear error and auto-populate printed name
+  document.querySelectorAll('.si').forEach(function(el) {
+    el.addEventListener('input', function() {
+      if (el.value.trim().length >= 2) {
+        var w = document.getElementById('sw-' + el.id);
+        var e = document.getElementById('E-' + el.id);
+        if (w) w.classList.remove('E');
+        if (e) e.classList.remove('on');
+      }
+      // Auto-populate corresponding printed name field
+      var pnameId = sigToPname[el.id];
+      if (pnameId) {
+        var pname = document.getElementById(pnameId);
+        if (pname) pname.value = el.value ? tc(el.value) : '';
+      }
+    });
+  });
+
+  // Any input: clear error styling when user changes value
+  document.querySelectorAll('input:not(.si), select, textarea').forEach(function(el) {
+    function clearOnChange() {
+      if (el.value || el.checked) {
+        el.classList.remove('E');
+        var e = document.getElementById('E-' + el.id);
+        if (e) e.classList.remove('on');
+      }
+    }
+    el.addEventListener('input', clearOnChange);
+    el.addEventListener('change', clearOnChange);
+  });
+});
+</script>
+</body>
+</html>
