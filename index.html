@@ -234,27 +234,37 @@ textarea{resize:vertical;min-height:86px;line-height:1.5;}
       <span class="em" id="E-rider-name">Rider's full name is required.</span>
     </div>
     <div class="fg">
-      <label class="L" for="rider-dob">Date of Birth <span class="rq">*</span></label>
-      <input type="date" id="rider-dob">
-      <span class="em" id="E-rider-dob">Date of birth is required.</span>
+      <label class="L">Date of Birth <span class="rq">*</span></label>
+      <div style="display:flex;gap:6px;align-items:center;">
+        <input type="text" id="dob-mm" class="dob-part" maxlength="2" placeholder="MM"
+          style="width:52px;text-align:center;" autocomplete="off" inputmode="numeric">
+        <span style="color:var(--gray);font-size:1.1rem;">/</span>
+        <input type="text" id="dob-dd" class="dob-part" maxlength="2" placeholder="DD"
+          style="width:52px;text-align:center;" autocomplete="off" inputmode="numeric">
+        <span style="color:var(--gray);font-size:1.1rem;">/</span>
+        <input type="text" id="dob-yyyy" class="dob-part" maxlength="4" placeholder="YYYY"
+          style="width:72px;text-align:center;" autocomplete="off" inputmode="numeric">
+      </div>
+      <input type="hidden" id="rider-dob">
+      <span class="em" id="E-rider-dob">Date of birth is required (MM/DD/YYYY).</span>
     </div>
   </div>
   <div class="r">
     <div class="fg">
       <label class="L" for="rider-street">Street Address <span class="rq">*</span></label>
-      <input type="text" id="rider-street" autocomplete="address-line1" placeholder="Street address">
+      <input type="text" id="rider-street" class="tc" autocomplete="address-line1" placeholder="Street address">
       <span class="em" id="E-rider-street">Street address is required.</span>
     </div>
   </div>
   <div class="r r3">
     <div class="fg">
       <label class="L" for="rider-city">City <span class="rq">*</span></label>
-      <input type="text" id="rider-city" autocomplete="address-level2" placeholder="City">
+      <input type="text" id="rider-city" class="tc" autocomplete="address-level2" placeholder="City">
       <span class="em" id="E-rider-city">City is required.</span>
     </div>
     <div class="fg">
       <label class="L" for="rider-state">State <span class="rq">*</span></label>
-      <input type="text" id="rider-state" autocomplete="address-level1" placeholder="MD" style="max-width:100px;">
+      <input type="text" id="rider-state" class="tc" autocomplete="address-level1" placeholder="MD" style="max-width:100px;">
       <span class="em" id="E-rider-state">State is required.</span>
     </div>
     <div class="fg">
@@ -301,7 +311,7 @@ textarea{resize:vertical;min-height:86px;line-height:1.5;}
     <div class="r">
       <div class="fg">
         <label class="L" for="c1-addr">Address</label>
-        <input type="text" id="c1-addr" autocomplete="off" placeholder="If different from rider's address">
+        <input type="text" id="c1-addr" class="tc" autocomplete="off" placeholder="If different from rider's address">
       </div>
     </div>
     <div class="r r2">
@@ -342,7 +352,7 @@ textarea{resize:vertical;min-height:86px;line-height:1.5;}
       <div class="r">
         <div class="fg">
           <label class="L" for="c2-addr">Address</label>
-          <input type="text" id="c2-addr" autocomplete="off" placeholder="If different from rider's address">
+          <input type="text" id="c2-addr" class="tc" autocomplete="off" placeholder="If different from rider's address">
         </div>
       </div>
       <div class="r r2">
@@ -362,7 +372,7 @@ textarea{resize:vertical;min-height:86px;line-height:1.5;}
   <div class="r r2">
     <div class="fg">
       <label class="L" for="school-name">School / Institution</label>
-      <input type="text" id="school-name" autocomplete="new-password" placeholder="Name of school or institution">
+      <input type="text" id="school-name" class="tc" autocomplete="new-password" placeholder="Name of school or institution">
     </div>
     <div class="fg">
       <label class="L" for="school-phone">School Phone</label>
@@ -411,7 +421,7 @@ textarea{resize:vertical;min-height:86px;line-height:1.5;}
         <option>Hispanic or Latino</option>
         <option>Middle Eastern or North African</option>
         <option>Native Hawaiian or Pacific Islander</option>
-        <option>White</option>
+        <option>Caucasian (White)</option>
         <option>Two or More Races</option>
         <option>Other</option>
         <option>Prefer not to say</option>
@@ -419,7 +429,7 @@ textarea{resize:vertical;min-height:86px;line-height:1.5;}
     </div>
     <div class="fg">
       <label class="L" for="mil-status">Rider's Military Status</label>
-      <input type="text" id="mil-status" autocomplete="off" placeholder="Veteran, Active Duty, N/A…">
+      <input type="text" id="mil-status" class="tc" autocomplete="off" placeholder="Veteran, Active Duty, N/A…">
     </div>
   </div>
   <div class="yn">
@@ -431,7 +441,7 @@ textarea{resize:vertical;min-height:86px;line-height:1.5;}
   </div>
   <div class="cp" id="fam-mil-d">
     <div class="fg"><label class="L" for="fam-mil-rel">Relationship to Rider</label>
-    <input type="text" id="fam-mil-rel" autocomplete="off" placeholder="E.g., Parent, Sibling"></div>
+    <input type="text" id="fam-mil-rel" class="tc" autocomplete="off" placeholder="E.g., Parent, Sibling"></div>
   </div>
   <div class="fg" style="margin-bottom:12px;">
     <label class="L">Education Level</label>
@@ -546,19 +556,19 @@ textarea{resize:vertical;min-height:86px;line-height:1.5;}
   <div class="r">
     <div class="fg">
       <label class="L" for="med-street">Street Address <span class="rq">*</span></label>
-      <input type="text" id="med-street" autocomplete="off" placeholder="Street address">
+      <input type="text" id="med-street" class="tc" autocomplete="off" placeholder="Street address">
       <span class="em" id="E-med-street">Required.</span>
     </div>
   </div>
   <div class="r r3">
     <div class="fg">
       <label class="L" for="med-city">City <span class="rq">*</span></label>
-      <input type="text" id="med-city" autocomplete="off" placeholder="City">
+      <input type="text" id="med-city" class="tc" autocomplete="off" placeholder="City">
       <span class="em" id="E-med-city">Required.</span>
     </div>
     <div class="fg">
       <label class="L" for="med-state">State</label>
-      <input type="text" id="med-state" autocomplete="off" placeholder="MD" style="max-width:100px;">
+      <input type="text" id="med-state" class="tc" autocomplete="off" placeholder="MD" style="max-width:100px;">
     </div>
     <div class="fg">
       <label class="L" for="med-zip">ZIP</label>
@@ -617,7 +627,7 @@ textarea{resize:vertical;min-height:86px;line-height:1.5;}
   <div class="r r2">
     <div class="fg">
       <label class="L" for="ins-co">Health Insurance Company</label>
-      <input type="text" id="ins-co" autocomplete="off" placeholder="Insurance company name">
+      <input type="text" id="ins-co" class="tc" autocomplete="off" placeholder="Insurance company name">
     </div>
     <div class="fg">
       <label class="L" for="ins-pol">Policy Number</label>
@@ -1067,7 +1077,17 @@ function vStep(s) {
   var ok = true;
   if (s === 0) {
     if (!rq('rider-name',  "Rider's full name is required."))     ok = false;
-    if (!rq('rider-dob',   "Date of birth is required."))         ok = false;
+    // DOB validation — check the hidden combined field
+    var dobHid = document.getElementById('rider-dob');
+    var dobOk = dobHid && dobHid.value && dobHid.value.length === 10;
+    if (!dobOk) {
+      var dobErr = document.getElementById('E-rider-dob');
+      if (dobErr) dobErr.classList.add('on');
+      ['dob-mm','dob-dd','dob-yyyy'].forEach(function(id){
+        var el = document.getElementById(id); if(el) el.classList.add('E');
+      });
+      ok = false;
+    }
     if (!rq('rider-street','Street address is required.'))          ok = false;
     if (!rq('rider-city',  'City is required.'))                    ok = false;
     if (!rq('rider-state', 'State is required.'))                   ok = false;
@@ -1568,24 +1588,79 @@ document.addEventListener('DOMContentLoaded', function() {
   // Force-clear fields the browser insists on autofilling
   // Browsers autofill after DOMContentLoaded, so we clear after a short delay
   setTimeout(function() {
-    var neverFill = ['school-name', 'school-phone', 'c1-addr', 'c2-name',
-                     'c2-addr', 'c2-phone', 'c2-email', 'ins-co', 'ins-pol',
-                     'mil-status', 'fam-mil-rel', 'shoe-size', 'conv-exp', 'eaat-exp'];
-    neverFill.forEach(function(id) {
+    // Always clear these fields regardless of what browser filled in
+    var alwaysClear = ['school-name', 'school-phone'];
+    alwaysClear.forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el) el.value = '';
+    });
+    // Clear signature fields — must never be pre-filled
+    document.querySelectorAll('.si').forEach(function(el) {
+      el.value = '';
+    });
+    // Clear DOB if browser filled it with something unexpected
+    var dob = document.getElementById('rider-dob');
+    if (dob) dob.value = '';
+    // Clear other fields only if browser filled them with the rider name
+    var conditional = ['c1-addr', 'c2-name', 'c2-addr', 'c2-phone', 'c2-email',
+                       'ins-co', 'ins-pol', 'mil-status', 'fam-mil-rel',
+                       'shoe-size', 'conv-exp', 'eaat-exp'];
+    conditional.forEach(function(id) {
       var el = document.getElementById(id);
       if (el && el.value && el.value === gv('rider-name')) el.value = '';
     });
-    // Specifically always clear school-name and school-phone
-    var sn = document.getElementById('school-name');
-    var sp = document.getElementById('school-phone');
-    if (sn) sn.value = '';
-    if (sp) sp.value = '';
-  }, 300);
+  }, 400);
 
-  // Set today's date in all date inputs
+  // DOB auto-advance MM → DD → YYYY
+  function initDobFields() {
+    var mm   = document.getElementById('dob-mm');
+    var dd   = document.getElementById('dob-dd');
+    var yyyy = document.getElementById('dob-yyyy');
+    var hid  = document.getElementById('rider-dob');
+    function syncHidden() {
+      if (mm && dd && yyyy && hid) {
+        var m = mm.value.padStart(2,'0');
+        var d = dd.value.padStart(2,'0');
+        var y = yyyy.value;
+        hid.value = (y && m && d) ? y + '-' + m + '-' + d : '';
+        // clear error if filled
+        if (hid.value) {
+          mm.classList.remove('E'); dd.classList.remove('E'); yyyy.classList.remove('E');
+          var e = document.getElementById('E-rider-dob');
+          if (e) e.classList.remove('on');
+        }
+      }
+    }
+    function onlyNums(e) {
+      e.target.value = e.target.value.replace(/[^0-9]/g,'');
+    }
+    if (mm) {
+      mm.addEventListener('input', function() {
+        onlyNums({target:mm});
+        syncHidden();
+        if (mm.value.length === 2) dd.focus();
+      });
+    }
+    if (dd) {
+      dd.addEventListener('input', function() {
+        onlyNums({target:dd});
+        syncHidden();
+        if (dd.value.length === 2) yyyy.focus();
+      });
+    }
+    if (yyyy) {
+      yyyy.addEventListener('input', function() {
+        onlyNums({target:yyyy});
+        syncHidden();
+      });
+    }
+  }
+  initDobFields();
+
+  // Set today's date in all OTHER date inputs (not rider-dob which is custom)
   var today = new Date().toISOString().split('T')[0];
   document.querySelectorAll('input[type="date"]').forEach(function(el) {
-    if (!el.value) el.value = today;
+    if (!el.value && el.id !== 'rider-dob') el.value = today;
   });
 
   // Phone formatting
@@ -1600,7 +1675,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  // Signature inputs: clear error and auto-populate printed name
+  // Signature inputs: clear error + auto-populate printed name as user types
   document.querySelectorAll('.si').forEach(function(el) {
     el.addEventListener('input', function() {
       if (el.value.trim().length >= 2) {
@@ -1609,7 +1684,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (w) w.classList.remove('E');
         if (e) e.classList.remove('on');
       }
-      // Auto-populate corresponding printed name field
+      // Auto-populate corresponding printed name field as signature is typed
       var pnameId = sigToPname[el.id];
       if (pnameId) {
         var pname = document.getElementById(pnameId);
